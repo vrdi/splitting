@@ -45,7 +45,7 @@ countydict = dict(graph.nodes(data=county_col))
 
 starting_partition = GeographicPartition(
     graph,
-    assignment="judge",
+    assignment="2011_PLA_1",
     updaters={
         "polsby_popper" : polsby_popper,
         "cut_edges": cut_edges,
