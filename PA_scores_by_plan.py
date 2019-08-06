@@ -10,9 +10,11 @@ import networkx as nx
 import numpy as np
 import geopandas as gpd
 import shapely
+import scipy
 from scipy.stats.stats import pearsonr
 import os
 import csv
+from itertools import combinations
 
 from score_functions import(
     locality_splits_dict,
@@ -114,63 +116,40 @@ for index, part in enumerate(partition_list):
     symmetric_entr.append(symmetric_entropy(part, graph, ccol, pop_col, gdf))
     n_pieces.append(num_pieces(part, graph, ccol))
 
+scores = [n_parts, c_bounds, shannon_entr, power_entr, n_split_locals, pa_fouls, symmetric_entr, n_pieces]
+score_labels = ["number_of_parts", "coincident_boundaries_score", "shannon_entropy", "power_entropy", "number_of_split_localities", "Pennsylvania_fouls", "symmetric_entropy", "number_of_pieces"]
 y_pos = np.arange(len(label_list))
 
-plt.figure()
-plt.bar(y_pos, n_parts, align='center', alpha=0.5)
-plt.xticks(y_pos, label_list)
-plt.ylabel('number of parts')
-plt.savefig(outdir + "n_parts_plot.png")
-plt.close()
+for i in range (len(scores)):
+    plt.figure()
+    plt.bar(y_pos, scores[i], align='center', alpha=0.5)
+    plt.xticks(y_pos, label_list)
+    plt.ylabel(score_labels[i])
+    plt.savefig(outdir + score_labels[i] + "_bar.png")
+    plt.close()
 
-plt.figure()
-plt.bar(y_pos, c_bounds, align='center', alpha=0.5)
-plt.xticks(y_pos, label_list)
-plt.ylabel('coincident boundaries score')
-plt.savefig(outdir + "c_bounds_plot.png")
-plt.close()
+for score_a, score_b in combinations(scores, 2):
+    a_name = score_labels[scores.index(score_a)]
+    b_name = score_labels[scores.index(score_b)]
+    
+    slope, intercept, r_value, p_value, std_err = scipy.stats.linregress(score_a, score_b)
 
-plt.figure()
-plt.bar(y_pos, shannon_entr, align='center', alpha=0.5)
-plt.xticks(y_pos, label_list)
-plt.ylabel('shannon entropy')
-plt.savefig(outdir + "shannon_entr_plot.png")
-plt.close()
+    minimum = min(score_a)
+    maximum = max(score_a)
 
-plt.figure()
-plt.bar(y_pos, power_entr, align='center', alpha=0.5)
-plt.xticks(y_pos, label_list)
-plt.ylabel('power entropy')
-plt.savefig(outdir + "power_entr_plot.png")
-plt.close()
+    x = np.linspace(minimum,maximum,100)
+    y = slope * x + intercept
 
-plt.figure()
-plt.bar(y_pos, n_split_locals, align='center', alpha=0.5)
-plt.xticks(y_pos, label_list)
-plt.ylabel('number of split localities')
-plt.savefig(outdir + "n_split_locals_plot.png")
-plt.close()
+    r_label = 'R^2=' + str(r_value**2)
 
-plt.figure()
-plt.bar(y_pos, pa_fouls, align='center', alpha=0.5)
-plt.xticks(y_pos, label_list)
-plt.ylabel('Pennsylvania fouls')
-plt.savefig(outdir + "pa_fouls_plot.png")
-plt.close()
-
-plt.figure()
-plt.bar(y_pos, symmetric_entr, align='center', alpha=0.5)
-plt.xticks(y_pos, label_list)
-plt.ylabel('symmetric entropy')
-plt.savefig(outdir + "symmetric_entr_plot.png")
-plt.close()
-
-plt.figure()
-plt.bar(y_pos, symmetric_entr, align='center', alpha=0.5)
-plt.xticks(y_pos, label_list)
-plt.ylabel('number of pieces')
-plt.savefig(outdir + "n_pieces_plot.png")
-plt.close()
+    plt.figure()
+    plt.scatter(score_a, score_b)
+    plt.plot(x, y, ':r', label=r_label)
+    plt.xlabel(a_name)
+    plt.ylabel(b_name)
+    plt.legend(loc='upper left')
+    plt.savefig(outdir + a_name + "_and_" + b_name + "_scatter.png")
+    plt.close()
 
 statistics = pd.DataFrame({
     "PLAN": label_list,
