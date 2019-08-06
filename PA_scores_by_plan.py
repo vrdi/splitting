@@ -27,7 +27,8 @@ from score_functions import(
     pennsylvania_fouls, 
     vtds_to_localities,
     dictionary_to_score,
-    symmetric_entropy
+    symmetric_entropy,
+    num_pieces
 )
 
 outdir = "./pa_score_outputs/"
@@ -102,6 +103,7 @@ power_entr = []
 n_split_locals = []
 pa_fouls = []
 symmetric_entr = []
+n_pieces = []
 for index, part in enumerate(partition_list):
     n_parts.append(num_parts(part, graph, ccol, gdf))
     c_bounds.append(coincident_boundaries(part, graph, ccol))
@@ -110,6 +112,7 @@ for index, part in enumerate(partition_list):
     n_split_locals.append(num_split_localities(part, graph, ccol, gdf))
     pa_fouls.append(pennsylvania_fouls(part, graph, ccol, pop_col, gdf))
     symmetric_entr.append(symmetric_entropy(part, graph, ccol, pop_col, gdf))
+    n_pieces.append(num_pieces(part, graph, ccol))
 
 y_pos = np.arange(len(label_list))
 
@@ -162,6 +165,13 @@ plt.ylabel('symmetric entropy')
 plt.savefig(outdir + "symmetric_entr_plot.png")
 plt.close()
 
+plt.figure()
+plt.bar(y_pos, symmetric_entr, align='center', alpha=0.5)
+plt.xticks(y_pos, label_list)
+plt.ylabel('number of pieces')
+plt.savefig(outdir + "n_pieces_plot.png")
+plt.close()
+
 statistics = pd.DataFrame({
     "PLAN": label_list,
     "NUM_PARTS": n_parts,
@@ -170,7 +180,8 @@ statistics = pd.DataFrame({
     "POWER_ENTROPY": power_entr,
     "NUM_SPLIT_LOCALITIES": n_split_locals,
     "PENNSYLVANIA_FOULS": pa_fouls,
-    "SYMMETRIC_ENTROPY": symmetric_entr
+    "SYMMETRIC_ENTROPY": symmetric_entr,
+    "NUM_PIECES": n_pieces
 })
 
 statistics.to_csv(outdir + "pa_score_statistics.csv", index=False)

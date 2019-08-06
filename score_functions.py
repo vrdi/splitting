@@ -326,3 +326,29 @@ def symmetric_entropy(partition, graph, locality_col, pop_col, df): #IN PROGRESS
     locality_splits, localities = locality_splits_dict(partition, graph, locality_col, df)
     dictionary = vtds_to_localities(partition, graph, locality_col, pop_col, localities)
     return dictionary_to_score(dictionary) + dictionary_to_score(invert_dict(dictionary))
+
+def num_pieces(partition, graph, locality_col):
+    '''
+    Calculates the number of pieces.
+
+    :param partition: The partition to be scored.
+    :param graph: A graph of the state shapefile.
+    :param locality_col: The string of the locality column's name.
+
+    :return: Number of pieces, where each piece is formed by cutting the graph by both county and district boundaries.
+
+    '''
+    locality_intersections = {}
+    for n in graph.nodes():
+        locality = graph.nodes[n][locality_col]
+        if locality not in locality_intersections:
+            locality_intersections[locality] = set([partition.assignment[n]])
+        locality_intersections[locality].update([partition.assignment[n]])
+    pieces = 0
+    for locality in locality_intersections:
+        for d in locality_intersections[locality]:
+            subgraph = graph.subgraph(
+                [x for x in partition.parts[d] if graph.nodes[x][locality_col] == locality]
+            )
+            pieces += nx.number_connected_components(subgraph)
+    return pieces
