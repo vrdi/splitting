@@ -1,23 +1,11 @@
 # Imports
 import os
 from gerrychain import Graph, GeographicPartition, Partition, Election, accept
-from gerrychain.updaters import Tally, cut_edges
 import geopandas as gpd
 import numpy as np
-from gerrychain.random import random
 import copy
 import seaborn as sns
-
-from gerrychain import MarkovChain
-from gerrychain.constraints import single_flip_contiguous
-from gerrychain.proposals import recom, propose_random_flip
-from gerrychain.accept import always_accept
-from gerrychain.metrics import polsby_popper
-from gerrychain import constraints
-from gerrychain.constraints import no_vanishing_districts
-
 from collections import defaultdict, Counter
-import matplotlib.pyplot as plt
 import networkx as nx
 import pandas
 import math
@@ -30,7 +18,7 @@ def locality_splits_dict(partition, graph, locality_col, df):
 
     :param partition: The partition for which a dictionary is being generated.
     :param locality_col: The string of the locality column's name. 
-    :param df: The dataframe.
+    :param df: A dataframe of the state shapefile.
 
     :return: 1) A dictionary with keys as dictrict numbers and values as Counter() dictionaries. These counter dictionaries have pairs County_ID: NUM which counts the number of VTDs in the county in the district. 2) A set of the localities in a state.
     '''
@@ -66,17 +54,17 @@ def coincident_boundaries(partition, graph, locality_col):
     :param partition: The partition to be scored.
     :param graph: The graph of the state shapefile. 
 
-    :return: The ratio of cut edges between two counties over the total number of cut edges.
+    :return: The number of cut edges within two counties.
     '''
-    countydict = dict(graph.nodes(data=locality_col))
+    locality_dict = dict(graph.nodes(data=locality_col))
 
     cut_edges_within = 0
     cut_edge_set = partition["cut_edges"]
     for i in cut_edge_set:
         vtd_1 = i[0]
         vtd_2 = i[1]
-        county_1 = countydict.get(vtd_1)
-        county_2 = countydict.get(vtd_2)
+        county_1 = locality_dict.get(vtd_1)
+        county_2 = locality_dict.get(vtd_2)
         if county_1 == county_2: #not on county boundary
             cut_edges_within += 1
     num_cut_edges = len(cut_edge_set)
@@ -283,3 +271,58 @@ def pennsylvania_fouls(partition, graph, locality_col, pop_col, df, to_add=1):
             too_many += 1
     
     return too_many
+
+def vtds_to_localities(partition, graph, locality_col, pop_col, localities): #IN PROGRESS
+    '''
+    Generates a dictionary with keys as districts and values as a dictionaries of locality-population key-values pairs.
+
+    :param partition: The partition for which a dictionary is being generated.
+    :param localities: A set of the localities in a state.
+    :param graph: A graph of the state shapefile.
+
+    :return: A dictionary with keys as districts and values as dictionaries of locality-population key-value pairs, which represents the population of each locality that is in each district.
+    '''
+    locality_dict = dict(graph.nodes(data=locality_col))
+    district_dict = dict(partition.parts)
+    new_district_dict = dict(partition.parts)
+    for district in district_dict.keys():
+        vtds = district_dict[district]
+        locality_pop = {k:0 for k in localities}
+        for vtd in vtds:
+            locality_pop[locality_dict[vtd]] += graph.nodes[vtd][pop_col]
+        new_district_dict[district] = locality_pop
+    return new_district_dict
+
+def dictionary_to_score(dictionary): #IN PROGRESS
+    '''
+    Calculates a symmetric entropy half score.
+
+    :param dictionary: The dictionary to be scored.
+
+    :return: The symmetric entropy half score of the dictionary.
+    '''
+    district_dict = dictionary
+    score = 0
+    for district in district_dict.keys():
+        localities_and_pops = district_dict[district]
+        total = sum(localities_and_pops.values())
+        fractional_sum = 0
+        for locality in localities_and_pops.keys():
+            fractional_sum += np.sqrt(localities_and_pops[locality]/total)
+        score += total*fractional_sum
+    return score
+
+def symmetric_entropy(partition, graph, locality_col, pop_col, df): #IN PROGRESS
+    '''
+    Calculates the symmetric entropy score.
+
+    :param partition: The partition to be scored.
+    :param graph: A graph of the state shapefile.
+    :param locality_col: The string of the locality column's name.
+    :param df: A dataframe of the state shapefile.
+
+    :return: The symmetric entropy score.
+    '''
+    locality_splits, localities = locality_splits_dict(partition, graph, locality_col, df)
+    dictionary = vtds_to_localities(partition, graph, locality_col, pop_col, localities)
+    return dictionary_to_score(dictionary) + dictionary_to_score(invert_dict(dictionary))

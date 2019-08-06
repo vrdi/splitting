@@ -33,7 +33,10 @@ from score_functions import(
     invert_dict,
     num_split_localities,
     pieces_allowed,
-    pennsylvania_fouls
+    pennsylvania_fouls, 
+    vtds_to_localities,
+    dictionary_to_score,
+    symmetric_entropy
 )
 
 shapefile = "https://github.com/mggg-states/PA-shapefiles/raw/master/PA/PA_VTD.zip"
@@ -68,3 +71,4 @@ print("Shannon entropy:", shannon_entropy(starting_partition, graph, county_col,
 print("Power entropy:", power_entropy(starting_partition, graph, county_col, df, 0.1))
 print("Number of split localities:", num_split_localities(starting_partition, graph, county_col, df))
 print("Pennsylvania fouls:", pennsylvania_fouls(starting_partition, graph, county_col, pop_col, df))
+print("Symmetric entropy:", symmetric_entropy(starting_partition, graph, county_col, pop_col, df))

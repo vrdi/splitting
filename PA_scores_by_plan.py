@@ -5,12 +5,30 @@ from gerrychain import (GeographicPartition, Partition, Graph, MarkovChain,
 from gerrychain.proposals import recom
 from gerrychain.updaters import cut_edges
 from functools import partial
-import pandas
+import pandas as pd
 import networkx as nx
 import numpy as np
 import geopandas as gpd
 import shapely
 from scipy.stats.stats import pearsonr
+import os
+import csv
+
+from score_functions import(
+    locality_splits_dict,
+    num_parts,
+    coincident_boundaries,
+    vtds_per_district,
+    shannon_entropy,
+    power_entropy,
+    invert_dict,
+    num_split_localities,
+    pieces_allowed,
+    pennsylvania_fouls, 
+    vtds_to_localities,
+    dictionary_to_score,
+    symmetric_entropy
+)
 
 outdir = "./pa_score_outputs/"
 try:
@@ -83,6 +101,7 @@ shannon_entr = []
 power_entr = []
 n_split_locals = []
 pa_fouls = []
+symmetric_entr = []
 for index, part in enumerate(partition_list):
     n_parts.append(num_parts(part, graph, ccol, gdf))
     c_bounds.append(coincident_boundaries(part, graph, ccol))
@@ -90,24 +109,68 @@ for index, part in enumerate(partition_list):
     power_entr.append(power_entropy(part, graph, ccol, gdf, 0.1))
     n_split_locals.append(num_split_localities(part, graph, ccol, gdf))
     pa_fouls.append(pennsylvania_fouls(part, graph, ccol, pop_col, gdf))
+    symmetric_entr.append(symmetric_entropy(part, graph, ccol, pop_col, gdf))
 
-
-csplits = []
-for index, part in enumerate(partition_list):
-    ci = county_intersections(part, ccol)
-    csplits.append(sum([len(x) for x in ci.values()])-len(ci))
 y_pos = np.arange(len(label_list))
-plt.bar(y_pos, csplits, align='center', alpha=0.5)
+
+plt.figure()
+plt.bar(y_pos, n_parts, align='center', alpha=0.5)
 plt.xticks(y_pos, label_list)
-plt.ylabel('county splittings')
+plt.ylabel('number of parts')
+plt.savefig(outdir + "n_parts_plot.png")
+plt.close()
+
+plt.figure()
+plt.bar(y_pos, c_bounds, align='center', alpha=0.5)
+plt.xticks(y_pos, label_list)
+plt.ylabel('coincident boundaries score')
+plt.savefig(outdir + "c_bounds_plot.png")
+plt.close()
+
+plt.figure()
+plt.bar(y_pos, shannon_entr, align='center', alpha=0.5)
+plt.xticks(y_pos, label_list)
+plt.ylabel('shannon entropy')
+plt.savefig(outdir + "shannon_entr_plot.png")
+plt.close()
+
+plt.figure()
+plt.bar(y_pos, power_entr, align='center', alpha=0.5)
+plt.xticks(y_pos, label_list)
+plt.ylabel('power entropy')
+plt.savefig(outdir + "power_entr_plot.png")
+plt.close()
+
+plt.figure()
+plt.bar(y_pos, n_split_locals, align='center', alpha=0.5)
+plt.xticks(y_pos, label_list)
+plt.ylabel('number of split localities')
+plt.savefig(outdir + "n_split_locals_plot.png")
+plt.close()
+
+plt.figure()
+plt.bar(y_pos, pa_fouls, align='center', alpha=0.5)
+plt.xticks(y_pos, label_list)
+plt.ylabel('Pennsylvania fouls')
+plt.savefig(outdir + "pa_fouls_plot.png")
+plt.close()
+
+plt.figure()
+plt.bar(y_pos, symmetric_entr, align='center', alpha=0.5)
+plt.xticks(y_pos, label_list)
+plt.ylabel('symmetric entropy')
+plt.savefig(outdir + "symmetric_entr_plot.png")
+plt.close()
 
 statistics = pd.DataFrame({
+    "PLAN": label_list,
     "NUM_PARTS": n_parts,
     "COINCIDENT_BOUNDARIES": c_bounds,
     "SHANNON_ENTROPY": shannon_entr,
     "POWER_ENTROPY": power_entr,
-    "NUM_SPLIT_LOCALITIES": num_split_localities,
-    "PENNSYLVANIA_FOULS": pa_fouls
+    "NUM_SPLIT_LOCALITIES": n_split_locals,
+    "PENNSYLVANIA_FOULS": pa_fouls,
+    "SYMMETRIC_ENTROPY": symmetric_entr
 })
 
 statistics.to_csv(outdir + "pa_score_statistics.csv", index=False)
