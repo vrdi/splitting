@@ -70,18 +70,17 @@ def coincident_boundaries(partition, graph, locality_col):
     '''
     countydict = dict(graph.nodes(data=locality_col))
 
-    cut_edges_between = 0
+    cut_edges_within = 0
     cut_edge_set = partition["cut_edges"]
     for i in cut_edge_set:
         vtd_1 = i[0]
         vtd_2 = i[1]
         county_1 = countydict.get(vtd_1)
         county_2 = countydict.get(vtd_2)
-        if county_1 != county_2:
-            cut_edges_between += 1
+        if county_1 == county_2: #not on county boundary
+            cut_edges_within += 1
     num_cut_edges = len(cut_edge_set)
-    score = cut_edges_between/num_cut_edges
-    return score
+    return cut_edges_within
 
 def vtds_per_district(locality_splits):
     """
