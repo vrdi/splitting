@@ -123,8 +123,10 @@ def shannon_entropy(partition, graph, locality_col, df):
         q = tot_county_vtds / total_vtds
         
         #iter thru districts to get vtds in county in district
-        for district in range(num_districts):            
-            counter = dict(locality_splits[district+1])            
+        #for district in range(num_districts):      
+        for k,v in locality_splits.items():
+            #counter = dict(locality_splits[district+1])  
+            counter = dict(v)          
             if locality_j in counter:
                 intersection = counter[str(locality_j)]
                 p = intersection / tot_county_vtds
@@ -174,8 +176,10 @@ def power_entropy(partition, graph, locality_col, df, alpha):
         q = tot_county_vtds / total_vtds
         
         #iter thru districts to get vtds in county in district
-        for district in range(num_districts):            
-            counter = dict(locality_splits[district+1])            
+        #for district in range(num_districts): 
+        for k,v in locality_splits.items():           
+            #counter = dict(locality_splits[district+1])            
+            counter = dict(v)
             if locality_j in counter:
                 intersection = counter[str(locality_j)]
                 p = intersection / tot_county_vtds
