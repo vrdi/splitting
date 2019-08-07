@@ -117,6 +117,18 @@ for score_a, score_b in combinations(scores, 2):
     plt.savefig(outdir + a_name + "_and_" + b_name + "_scatter.png")
     plt.close()
 
+
+for i in range (len(partition_list)):
+    part = partition_list[i]
+
+    gdfc = gdf.dissolve(by=ccol)
+    assignment_series = part.assignment.to_series()
+    gdf["assignment"] = assignment_series
+    axes = gdfc.boundary.plot(figsize=(20,15), color=None, edgecolor="black", linewidth=0.5)
+    gdf.plot(column="assignment", cmap='tab20', ax=axes)
+    plt.savefig(outdir + label_list[i] + "_map.png")
+    plt.close()
+
 statistics = pd.DataFrame({
     "PLAN": label_list,
     "NUM_PARTS": n_parts,
