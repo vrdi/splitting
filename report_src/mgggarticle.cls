@@ -182,7 +182,7 @@
 
 % Abstract
 \mdfdefinestyle{abstract}{%
-    backgroundcolor=mggglightgray,
+    %backgroundcolor=mggglightgray,
     hidealllines=true,
     innertopmargin=1em,
     innerbottommargin=1em,
@@ -207,7 +207,7 @@
 }
 \setlength{\footnotesep}{1em}
 \def\author#1{\def\and{and }\gdef\@author{#1}}
-\long\def\name#1{#1\\\vspace*{3pt}}%
+\long\def\name#1{#1\\}%
 \long\def\affil#1{\affilfont{#1}\\}
 \long\def\email#1{#1\\}
 \def\thanks#1{\begingroup
@@ -218,11 +218,10 @@
 \renewcommand{\maketitle}{%
 % \BgThispage
 \begin{center}
-\vskip 1.5em
+\vskip .5em
 {\noindent\huge\playfair\bfseries\color{mgggdarkblue}\@title}
-\vskip 1.5em
+\vskip 1em
 %\includegraphics[width=3in]{logo/logo_on_usa}
-\vskip 1.5em
 {\authorfont \@author}
 \end{center}
 \vskip 1.5em

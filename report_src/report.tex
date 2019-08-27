@@ -4,14 +4,15 @@
 \usepackage{parskip}
 \usepackage{mathtools}
 \usepackage{caption}
-
+\usepackage{hyperref}
 \usepackage{subcaption}
+
 
 \usepackage{amsthm}
 \newtheorem{Lemma}{Lemma}
 
 \title{Discussion of Locality Splitting Measures}
-\author{\name{Taissa Gladkova, Ari Goldbloom-Helzner, Muniba Khan, Brandon Kolstoe, Jasmine Noory, Zachary Schutzman, \and Thomas Weighill}\affil{Voting Rights Data Institute 2019}}
+\author{\name{Splittings Group}\affil{Voting Rights Data Institute 2019}}
 \date{August 2019}
 
 \DeclareMathOperator{\pop}{pop}
@@ -21,18 +22,43 @@
 
 \version{1.0}
 
+\titlespacing\section{0pt}{12pt plus 4pt minus 2pt}{0pt plus 2pt minus 2pt}
+\titlespacing\subsection{0pt}{12pt plus 4pt minus 2pt}{0pt plus 2pt minus 2pt}
+\titlespacing\subsubsection{0pt}{12pt plus 4pt minus 2pt}{0pt plus 2pt minus 2pt}
+
 \begin{document}
 
+
+
+
 \maketitle
+
+
+
+\section*{Contributors}
+{Taissa Gladkova, Ari Goldbloom-Helzner, Muniba Khan, Brandon Kolstoe, Jasmine Noory, Zachary Schutzman, \and Thomas Weighill} contributed to the research, analysis, coding, and writing of this report.
+
+
+\vspace*{-1em}
+	
+\section*{About}
+This report is the product of the Week 3 project on `splitting' at the 2019 Voting Rights Data Institute.  Our goal was to investigate ways to operationalize the general concept of `districts ought not to split political subunits'.  We considered legal and philosophical frameworks motivating this imperative, existing measures, and work done at the 2018 Voting Rights Data Institute.  Informed by this, we introduce a novel splitting measure which we call `naked boundary', which captures the extent to which the district lines fail to follow locality boundaries.
+
+
+The code to compute these scores is now integrated into \texttt{gerrychain}.  Documentation for using these scores to evaluate your own plans or ensembles of plans can be found in the \texttt{gerrychain} documentation at \href{https://gerrychain.readthedocs.io}{\texttt{gerrychain.readthedocs.io}}.  The source code can be found in the \href{https://github.com/mggg/GerryChain/blob/master/gerrychain/updaters/locality_split_scores.py}{ \texttt{gerrychain} repository on GitHub}.
+
 \tableofcontents
+
+
+
 
 \section{Why shouldn't districts split localities?}
 The reasons why one may want districts to keep localities whole are varied. The relevance of each of these motivations may vary from state to state -- for example, a state where counties play a large role in governing may consider the ``nested government'' argument to be stronger. We list here a non-exhaustive list of reasons which one may want to consider. We focus on the case of counties as that was the primary motivating example of a locality considered during the project's run.
 
-\begin{itemize}
-\item \emph{existing law} -- nineteen out of fifty states require or advise for their congressional districts to follow political boundaries. Of the twelve that get into any specifics, all twelve specifically mention counties.
+\begin{enumerate}
+\item \textbf{Existing law} -- nineteen out of fifty states require or advise for their congressional districts to follow political boundaries. Of the twelve that get into any specifics, all twelve specifically mention counties.
 
-\item \emph{limiting gerrymandering} -- it is possible that restricting the ability of districts to split up larger units such as counties may limit the ability of map-drawers to gerrymander.  There is some evidence based on ensembles for this in the \emph{Virginia criteria paper}. As further informal evidence for this fact, consider the following map of NC. The underlying choropleth shows the vote share from the 2016 presidential election and the county borders are in black. In yellow, we indicate the district boundaries -- the districts are current as of 2019 and were part of the gerrymandering case \emph{Rucho vs Common Cause}. 
+\item \textbf{Limiting gerrymandering} -- it is possible that restricting the ability of districts to split up larger units such as counties may limit the ability of map-drawers to gerrymander.  There is some evidence based on ensembles for this in the \emph{Virginia criteria paper}. As further informal evidence for this fact, consider the following map of NC. The underlying choropleth shows the vote share from the 2016 presidential election and the county borders are in black. In yellow, we indicate the district boundaries -- the districts are current as of 2019 and were part of the gerrymandering case \emph{Rucho vs Common Cause}. 
 \begin{figure}[h]
 \centering
 \includegraphics[width=\textwidth]{figs/NC_counties.png}
@@ -40,12 +66,12 @@ The reasons why one may want districts to keep localities whole are varied. The 
 \end{figure}
 One may observe that where the districts deviate from county boundaries, it is often seemingly to either crack or pack a blue region of precincts -- one may even be tempted to say that ``the gerrymandering happens in the interior of the counties''. We stress that this is just a preliminary analysis, and more study is required.
 
-\item \emph{communities of interest} -- in some cases, counties represent a community which should be kept whole for the purposes of representing the interests of that community. 
+\item \textbf{Communities-of-interest} -- in some cases, counties represent a community which should be kept whole for the purposes of representing the interests of that community. 
 
-\item \emph{election administration} -- to the extent that counties are involved in administering elections, fewer districts means fewer ballots to manage.
+\item \textbf{Election administration} -- to the extent that counties are involved in administering elections, fewer districts means fewer ballots to manage.
 
-\item \emph{nested government} -- a general principle of governance is that the various jurisdictions at each level of government be nested.
-\end{itemize}
+\item \textbf{Nested government} -- a general principle of governance is that the various jurisdictions at each level of government be nested.
+\end{enumerate}
  
 \section{Splitting scores}
 It is not always clear what should be meant by ``splitting counties less''. Since it is not always feasible to find even one map that never splits a county (some counties are for example far more populous than any district), trade-offs must be made. In order to compare different plans against one another, one can come up with a score which reflects the extent to which county splitting occurs in the plan. The main body of work in the VRDI project was to propose and analyse a number of different such scores. Here we present some of the more promising scores considered. Again, we consider the case of counties, though other localities can also be considered. In each case, we list what we consider the advantages and disadvantages of the score, as well as any other properties the score has whose value is unclear.
@@ -144,10 +170,10 @@ where $\alpha$ is some parameter between $0$ and $1$. We refer the reader to the
 
 \subsection{Naked boundary}
 \textbf{Definition: } The length of district boundary which is not coincident with a county boundary. This ``length'' may be computed either
-\begin{itemize}
-\item exactly (in miles), or
-\item approximated by the number of cut edges between districts whose ends lie in the same county.
-\end{itemize} 
+\begin{enumerate}
+\item[{\small$\bullet$}] exactly (in miles), or
+\item[{\small$\bullet$}] approximated by the number of cut edges between districts whose ends lie in the same county.
+\end{enumerate} 
 
 \textbf{Advantages: } Considers geography, and penalizes ``weird'' intra-county district boundaries which may fail the eyeball test. Simple to explain and in natural units when computed in miles. Appears to line up well with legal language surrounding ``political boundaries''.
 
@@ -361,13 +387,16 @@ A lot more work is needed to design MCMC runs which fully explore plans with sim
 
 \section{(Tentative) recommendations}
 The scores seem to naturally group into three types:
-\begin{itemize}
-\item ``Simple counts'' -- scores which are easy to understand and compute such as Splits, Parts and Pieces.
-\item ``Population-based methods'' -- the main characteristic of these scores is they care how the population of a county is divided up (e.g. entropy methods).
-\item ``Geography-based methods'' -- only Naked Boundary represents this class in this report, the main characteristic being that this score cares how the \emph{geography} of a county is divided up.
-\end{itemize}
+\begin{enumerate}
+\item \textbf{Simple counts} -- scores which are easy to understand and compute such as Splits, Parts and Pieces.
+\item \textbf{Population-based methods} -- the main characteristic of these scores is they care how the population of a county is divided up (e.g. entropy methods).
+\item \textbf{Geography-based methods} -- only Naked boundary represents this class in this report, the main characteristic being that this score cares how the \emph{geography} of a county is divided up.
+\end{enumerate}
 
 One can find good reasons to be interested in scores from each of these classes. One should take into account, however, that the simpler scores are easier to codify in law and explain to non-experts. We may tentatively want to recommend that simple counts form the bedrock of questions about county splittings, and thereafter the stakeholders determine for themselves which additional, finer aspects of the problem they care about and whether they are willing to deploy more nuanced and complicated scores.
+
+
+
 
 
 \end{document}
