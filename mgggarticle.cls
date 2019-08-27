@@ -45,7 +45,7 @@
 \definecolor{mgggblue}{HTML}{0099cd}
 \definecolor{mgggdarkblue}{HTML}{006b9c}
 \newcommand{\headlinecolor}{\color{mgggblue}}
-\definecolor{mgggdarkgray}{HTML}{666666}
+\definecolor{mgggdarkgray}{HTML}{444444}
 \definecolor{mggggray}{HTML}{777777}
 \definecolor{mggglightgray}{HTML}{f9f9f9}
 
@@ -196,7 +196,8 @@
     %{\sffamily\Large Abstract}
     \par\noindent\ignorespaces
 }{\ignorespacesafterend\end{mdframed}}
-
+\newcommand{\authorfont}{\sffamily\large\color{mgggdarkgray}}
+\newcommand{\affilfont}{\sffamily\normalsize\color{mggggray}}
 % Footnotes
 \renewcommand{\footnoterule}{%
     \vskip 1.5em
@@ -205,10 +206,15 @@
     \kern 2.6pt
 }
 \setlength{\footnotesep}{1em}
-
-
+\def\author#1{\def\and{and }\gdef\@author{#1}}
+\long\def\name#1{#1\\\vspace*{3pt}}%
+\long\def\affil#1{\affilfont{#1}\\}
+\long\def\email#1{#1\\}
+\def\thanks#1{\begingroup
+	\def\protect{\noexpand\protect\noexpand}\xdef\@thanks{\@thanks%
+		\protect\footnotetext[\the\c@footnote]{\footnotesize#1}}\endgroup}
 % Title
-\newcommand{\authorfont}{\sffamily\large\color{mgggdarkgray}}
+
 \renewcommand{\maketitle}{%
 % \BgThispage
 \begin{center}

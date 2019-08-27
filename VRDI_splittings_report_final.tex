@@ -10,8 +10,8 @@
 \usepackage{amsthm}
 \newtheorem{Lemma}{Lemma}
 
-\title{Splitting scores at VRDI 2019}
-\author{taissa.gladkova + splittings group 2019}
+\title{Discussion of Locality Splitting Measures}
+\author{\name{Taissa Gladkova, Ari Goldbloom-Helzner, Muniba Khan, Brandon Kolstoe, Jasmine Noory, Zachary Schutzman, \and Thomas Weighill}\affil{Voting Rights Data Institute 2019}}
 \date{August 2019}
 
 \DeclareMathOperator{\pop}{pop}
@@ -19,7 +19,7 @@
 \DeclareMathOperator{\cou}{counties}
 
 
-
+\version{1.0}
 
 \begin{document}
 
@@ -35,7 +35,7 @@ The reasons why one may want districts to keep localities whole are varied. The 
 \item \emph{limiting gerrymandering} -- it is possible that restricting the ability of districts to split up larger units such as counties may limit the ability of map-drawers to gerrymander.  There is some evidence based on ensembles for this in the \emph{Virginia criteria paper}. As further informal evidence for this fact, consider the following map of NC. The underlying choropleth shows the vote share from the 2016 presidential election and the county borders are in black. In yellow, we indicate the district boundaries -- the districts are current as of 2019 and were part of the gerrymandering case \emph{Rucho vs Common Cause}. 
 \begin{figure}[h]
 \centering
-\includegraphics[width=\textwidth]{NC_counties.png}
+\includegraphics[width=\textwidth]{figs/NC_counties.png}
 \caption{North Carolina enacted districts deviation from county boundaries}
 \end{figure}
 One may observe that where the districts deviate from county boundaries, it is often seemingly to either crack or pack a blue region of precincts -- one may even be tempted to say that ``the gerrymandering happens in the interior of the counties''. We stress that this is just a preliminary analysis, and more study is required.
@@ -183,39 +183,39 @@ In order to get some feeling for the scores and how they compare on human-drawn 
 \begin{figure}[h]
 \begin{subfigure}{0.475\textwidth}
 \centering
-\includegraphics[width=\textwidth]{2011_counties.png}
+\includegraphics[width=\textwidth]{figs/2011_counties.png}
 \caption{2011}
 \end{subfigure}
 \begin{subfigure}{0.475\textwidth}
 \centering
-\includegraphics[width=\textwidth]{CPCT_counties.png}
+\includegraphics[width=\textwidth]{figs/CPCT_counties.png}
 \caption{CPCT}
 \end{subfigure}
 
 \begin{subfigure}{0.475\textwidth}
-\includegraphics[width=\textwidth]{DEM_counties.png}
+\includegraphics[width=\textwidth]{figs/DEM_counties.png}
 \caption{DEM}
 \end{subfigure}
 \begin{subfigure}{0.475\textwidth}
-\includegraphics[width=\textwidth]{REMEDIAL_counties.png}
+\includegraphics[width=\textwidth]{figs/REMEDIAL_counties.png}
 \caption{REMEDIAL}
 \end{subfigure}
 
 \begin{subfigure}{0.475\textwidth}
-\includegraphics[width=\textwidth]{GOV_counties.png}
+\includegraphics[width=\textwidth]{figs/GOV_counties.png}
 \caption{GOV}
 \end{subfigure}
 \begin{subfigure}{0.475\textwidth}
-\includegraphics[width=\textwidth]{GOP_counties.png}
+\includegraphics[width=\textwidth]{figs/GOP_counties.png}
 \caption{GOP}
 \end{subfigure}
 
 \begin{subfigure}{0.475\textwidth}
-\includegraphics[width=\textwidth]{8th_counties.png}
+\includegraphics[width=\textwidth]{figs/8th_counties.png}
 \caption{8th}
 \end{subfigure}
 \begin{subfigure}{0.475\textwidth}
-\includegraphics[width=\textwidth]{TS_counties.png}
+\includegraphics[width=\textwidth]{figs/TS_counties.png}
 \caption{TS}
 \end{subfigure}
 
@@ -230,45 +230,45 @@ Finally, one can compare these scores on the eight plans with scatter plots. Whi
 \centering
 \begin{subfigure}{0.4\textwidth}
 \centering
-\includegraphics[width=\textwidth]{bars/coincident_boundaries_score_bar.png}
+\includegraphics[width=\textwidth]{figs/bars/coincident_boundaries_score_bar.png}
 \caption{Naked boundary}
 \end{subfigure}
 \begin{subfigure}{0.4\textwidth}
 \centering
-\includegraphics[width=\textwidth]{bars/number_of_parts_bar.png}
+\includegraphics[width=\textwidth]{figs/bars/number_of_parts_bar.png}
 \caption{Parts}
 \end{subfigure}
 
 \begin{subfigure}{0.4\textwidth}
 \centering
-\includegraphics[width=\textwidth]{bars/number_of_split_localities_bar.png}
+\includegraphics[width=\textwidth]{figs/bars/number_of_split_localities_bar.png}
 \caption{Splits}
 \end{subfigure}
 \begin{subfigure}{0.4\textwidth}
 \centering
-\includegraphics[width=\textwidth]{bars/power_entropy_bar.png}
+\includegraphics[width=\textwidth]{figs/bars/power_entropy_bar.png}
 \caption{Power entropy, $\alpha = 0.8$}
 \end{subfigure}
 
 \begin{subfigure}{0.4\textwidth}
 \centering
-\includegraphics[width=\textwidth]{bars/shannon_entropy_bar.png}
+\includegraphics[width=\textwidth]{figs/bars/shannon_entropy_bar.png}
 \caption{Shannon entropy}
 \end{subfigure}
 \begin{subfigure}{0.4\textwidth}
 \centering
-\includegraphics[width=\textwidth]{bars/symmetric_entropy_bar.png}
+\includegraphics[width=\textwidth]{figs/bars/symmetric_entropy_bar.png}
 \caption{Sym. square-root entropy}
 \end{subfigure}
 
 \begin{subfigure}{0.4\textwidth}
 \centering
-\includegraphics[width=\textwidth]{bars/Pennsylvania_fouls_bar.png}
+\includegraphics[width=\textwidth]{figs/bars/Pennsylvania_fouls_bar.png}
 \caption{Pennsylvania fouls}
 \end{subfigure}
 \begin{subfigure}{0.4\textwidth}
 \centering
-\includegraphics[width=\textwidth]{bars/number_of_pieces_bar.png}
+\includegraphics[width=\textwidth]{figs/bars/number_of_pieces_bar.png}
 \caption{Pieces}
 \end{subfigure}
 \caption{Scores for human-drawn plans on PA}
@@ -281,40 +281,40 @@ Finally, one can compare these scores on the eight plans with scatter plots. Whi
 \centering
 \begin{subfigure}{0.4\textwidth}
 \centering
-\includegraphics[width=\textwidth]{scatters/cb.png}
+\includegraphics[width=\textwidth]{figs/scatters/cb.png}
 \caption{Naked boundary}
 \end{subfigure}
 \begin{subfigure}{0.4\textwidth}
 \centering
-\includegraphics[width=\textwidth]{scatters/splits.png}
+\includegraphics[width=\textwidth]{figs/scatters/splits.png}
 \caption{Splits}
 \end{subfigure}
 
 \begin{subfigure}{0.4\textwidth}
 \centering
-\includegraphics[width=\textwidth]{scatters/pent.png}
+\includegraphics[width=\textwidth]{figs/scatters/pent.png}
 \caption{Power entropy, $\alpha = 0.8$}
 \end{subfigure}
 \begin{subfigure}{0.4\textwidth}
 \centering
-\includegraphics[width=\textwidth]{scatters/shent.png}
+\includegraphics[width=\textwidth]{figs/scatters/shent.png}
 \caption{Shannon entropy}
 \end{subfigure}
 
 \begin{subfigure}{0.4\textwidth}
 \centering
-\includegraphics[width=\textwidth]{scatters/syment.png}
+\includegraphics[width=\textwidth]{figs/scatters/syment.png}
 \caption{Sym. square-root entropy}
 \end{subfigure}
 \begin{subfigure}{0.4\textwidth}
 \centering
-\includegraphics[width=\textwidth]{scatters/Penn.png}
+\includegraphics[width=\textwidth]{figs/scatters/Penn.png}
 \caption{Pennsylvania fouls}
 \end{subfigure}
 
 \begin{subfigure}{0.4\textwidth}
 \centering
-\includegraphics[width=\textwidth]{scatters/parts.png}
+\includegraphics[width=\textwidth]{figs/scatters/parts.png}
 \caption{Parts}
 \end{subfigure}
 \caption{Scatter plots vs Pieces for human-drawn PA plans}
@@ -328,12 +328,12 @@ The remedial PA districting plan has 596 cut edges that are not coincident with 
 \begin{figure}[h]
 	\begin{subfigure}{0.475\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{coin_bound_vs_pieces_5000_10.png}
+    \includegraphics[width=\textwidth]{figs/coin_bound_vs_pieces_5000_10.png}
     \caption{Naked boundary vs. Pieces}
     \end{subfigure}
     	\begin{subfigure}{0.475\textwidth}
 \centering
-    \includegraphics[width=\textwidth]{coin_bound_vs_power_5_entropy_5000_10.png}
+    \includegraphics[width=\textwidth]{figs/coin_bound_vs_power_5_entropy_5000_10.png}
     \caption{Naked boundary vs. Sym.}
 \end{subfigure}
 \caption{Short burst runs on PA}
@@ -343,12 +343,12 @@ We also find that the naked boundary score is anti-correlated with power entropy
 
 \begin{figure}[h]
 	\begin{subfigure}{\textwidth}
-	        \includegraphics[width=\linewidth]{rem_init_bound.png}
+	        \includegraphics[width=\linewidth]{figs/rem_init_bound.png}
 	                 \caption{REMEDIAL plan}
 	\end{subfigure}
 	
 	\begin{subfigure}{\textwidth}
-        \includegraphics[width=\linewidth]{min_naked_bound.png} 
+        \includegraphics[width=\linewidth]{figs/min_naked_bound.png} 
                  \caption{Min. naked boundary plan}
 
 	\end{subfigure}
