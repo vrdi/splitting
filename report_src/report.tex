@@ -38,7 +38,7 @@
 \section*{Contributors}
 {Taissa Gladkova, Ari Goldbloom-Helzner, Muniba Khan, Brandon Kolstoe, Jasmine Noory, Zachary Schutzman, Eric Stucky, \and Thomas Weighill} contributed to the research, analysis, coding, and writing of this report.
 
-
+The views expressed in this report belong solely to the authors as individuals and are not reflective of the opinions of any other individual or organization.
 \vspace*{-1em}
 	
 \section*{About}
@@ -46,6 +46,7 @@ This report is the product of the Week 3 project on `splitting' at the 2019 Voti
 
 
 The code to compute these scores is now integrated into \texttt{gerrychain}.  Documentation for using these scores to evaluate your own plans or ensembles of plans can be found in the \texttt{gerrychain} documentation at \href{https://gerrychain.readthedocs.io}{\texttt{gerrychain.readthedocs.io}}.  The source code can be found in the \href{https://github.com/mggg/GerryChain/blob/master/gerrychain/updaters/locality_split_scores.py}{ \texttt{gerrychain} repository on GitHub}.
+
 
 \tableofcontents
 
@@ -385,16 +386,19 @@ A lot more work is needed to design MCMC runs which fully explore plans with sim
 
 
 
-\section{(Tentative) recommendations}
-The scores seem to naturally group into three types:
+\section{Summary and Tentative Recommendations}
+The scores we consider seem to naturally group into three types:
 \begin{enumerate}
 \item \textbf{Simple counts} -- scores which are easy to understand and compute such as Splits, Parts and Pieces.
 \item \textbf{Population-based methods} -- the main characteristic of these scores is they care how the population of a county is divided up (e.g. entropy methods).
 \item \textbf{Geography-based methods} -- only Naked boundary represents this class in this report, the main characteristic being that this score cares how the \emph{geography} of a county is divided up.
 \end{enumerate}
 
-One can find good reasons to be interested in scores from each of these classes. One should take into account, however, that the simpler scores are easier to codify in law and explain to non-experts. We may tentatively want to recommend that simple counts form the bedrock of questions about county splittings, and thereafter the stakeholders determine for themselves which additional, finer aspects of the problem they care about and whether they are willing to deploy more nuanced and complicated scores.
+One can find good reasons to be interested in scores from each of these classes. One should take into account, however, that the simpler scores are easier to codify in law and explain to non-experts. We also caution that strictly codifying and adhering to any measure, including, but not limited to, splitting scores, can create undesirable conflicts with other redistricting criteria, such as compliance with the Voting Rights Act or a desire to preserve communities-of-interest.
 
+We may tentatively want to recommend that simple counts form the bedrock of questions about county splittings, and thereafter the stakeholders determine for themselves which additional, finer aspects of the problem they care about and whether they are willing to deploy more nuanced and complicated scores.  It may even make sense to use different kinds of scores to evaluate different splits, even within the same plan.
+
+We further note that the role of different localities differs by state and jurisdiction.  In states such as Texas, the county is an important political subunit which administers elections, maintains infrastructure, and has a criminal justice system.  On the opposite end of the spectrum, Rhode Island's counties are artifacts of history, and have no county-level government.  There, the towns and cities are the primary units of local government.  We recommend that in considering how plans split localities, lawmakers, stakeholders, and analysts take into account the role of that particular kind of political subunit in determining the importance of preserving them.
 
 
 
